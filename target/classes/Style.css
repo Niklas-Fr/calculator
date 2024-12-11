@@ -1,0 +1,32 @@
+.panel{
+    -fx-background-color: #313131;
+}
+
+.label{
+    -fx-background-color: #313131;
+    -fx-font-family: inter;
+    -fx-text-fill: white;
+    -fx-font-size: 26;
+}
+
+.calc_button{
+    -fx-background-color: #FFA500;
+    -fx-padding: 0;
+    -fx-margin: 0;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 50%;
+    -fx-text-fill: white;
+    -fx-font-family: inter;
+    -fx-font-size: 26;
+}
+
+.number_button {
+    -fx-background-color: #808080;
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 25px;
+    -fx-pref-height: 25px;
+    -fx-font-family: inter;
+    -fx-font-size: 26;
+}
