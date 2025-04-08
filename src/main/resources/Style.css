@@ -2,11 +2,24 @@
     -fx-background-color: #313131;
 }
 
-.label{
+.label1{
     -fx-background-color: #313131;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
     -fx-font-family: inter;
     -fx-text-fill: white;
-    -fx-font-size: 26;
+    -fx-font-size: 28;
+    -fx-font-weight: 600;
+}
+
+.label2{
+    -fx-background-color: #313131;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-font-family: inter;
+    -fx-text-fill: grey;
+    -fx-font-size: 18;
+    -fx-font-weight: 600;
 }
 
 .calc_button{
@@ -19,14 +32,31 @@
     -fx-text-fill: white;
     -fx-font-family: inter;
     -fx-font-size: 26;
+    -fx-font-weight: 600;
 }
 
 .number_button {
-    -fx-background-color: #808080;
+    -fx-background-color: #5b5b5b;
+    -fx-padding: 0;
+    -fx-margin: 0;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
     -fx-text-fill: white;
     -fx-background-radius: 50%;
-    -fx-pref-width: 25px;
-    -fx-pref-height: 25px;
     -fx-font-family: inter;
-    -fx-font-size: 26;
+    -fx-font-size: 18;
+    -fx-font-weight: 600;
+}
+
+.operate_button {
+    -fx-background-color: #808080;
+    -fx-padding: 0;
+    -fx-margin: 0;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-font-family: inter;
+    -fx-font-size: 16;
+    -fx-font-weight: 600;
 }
