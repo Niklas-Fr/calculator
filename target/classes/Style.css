@@ -4,7 +4,7 @@
 
 .label1{
     -fx-background-color: #313131;
-    -fx-pref-width: 200px;
+    -fx-pref-width: 1000px;
     -fx-pref-height: 40px;
     -fx-font-family: inter;
     -fx-text-fill: white;
@@ -14,7 +14,7 @@
 
 .label2{
     -fx-background-color: #313131;
-    -fx-pref-width: 200px;
+    -fx-pref-width: 1000px;
     -fx-pref-height: 40px;
     -fx-font-family: inter;
     -fx-text-fill: grey;
