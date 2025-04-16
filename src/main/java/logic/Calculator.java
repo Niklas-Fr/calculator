@@ -2,9 +2,11 @@ package logic;
 
 public final class Calculator {
     private static final String SEPARATOR = "[+\\-×÷]";
+    private static final String INVERSED_SEPARATOR = "[^+\\-×÷]";
+    private static final String PERCENT = "%";
+    private static final String DECIMAL_POINT = ".";
 
     private Calculator() {
-
     }
 
     //TODO: handle negative numbers
@@ -14,9 +16,15 @@ public final class Calculator {
         double[] numbers = new double[temp.length];
 
         for (int i = 0; i < temp.length; i++) {
-            numbers[i] = Double.parseDouble(temp[i]);
+            temp[i] = temp[i].replace(Operators.COMMA.getSymbol(), DECIMAL_POINT);
+            if (temp[i].contains(PERCENT)) {
+                numbers[i] = Double.parseDouble(temp[i].replaceAll(PERCENT, "")) / 100;
+            } else {
+                System.out.println("temp:" + temp[i]);
+                numbers[i] = Double.parseDouble(temp[i]);
+            }
         }
-        char[] operators = caluculation.replaceAll("[^+\\-×÷]", "").toCharArray();
+        char[] operators = caluculation.replaceAll(INVERSED_SEPARATOR, "").toCharArray();
 
         for (int i = 0; i < temp.length - 1; i++) {
             double firstNum = numbers[i];
