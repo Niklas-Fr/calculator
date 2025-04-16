@@ -3,11 +3,13 @@ package application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logic.Calculator;
 import logic.Coordinate;
 import logic.Operators;
+import javafx.scene.text.Text;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -42,6 +44,7 @@ public class Application extends javafx.application.Application {
     private static final String DELETE_BUTTON_UNICODE = "⌫";
     private static final String CALCULATION_OPERATORS = "+-×÷";
     private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
+    private static final int BUFFER_SIZE = 20;
     private Label lowerLabel;
     private Label upperLabel;
 
@@ -49,8 +52,7 @@ public class Application extends javafx.application.Application {
         launch(arg);
     }
 
-    // TODO: buttons auslagern?
-    // TODO: adapt label size to input
+    // TODO: result should always be visible -> change font size depending on result
 
     @Override
     public void start(Stage stage) {
@@ -65,7 +67,6 @@ public class Application extends javafx.application.Application {
         List<Button> calculationButtons = getOperatorButtons();
 
         Pane pane = new Pane();
-        pane.getStyleClass().add(CSS_STYLES[1]);
         pane.getChildren().addAll(calculationButtons);
         pane.getChildren().add(lowerLabel);
         pane.getChildren().add(upperLabel);
@@ -78,6 +79,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(pane, WIDTH, HEIGHT);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(CSS_STYLES[0])).toExternalForm());
 
+        pane.getStyleClass().add(CSS_STYLES[1]);
         lowerLabel.getStyleClass().add(CSS_STYLES[2]);
         upperLabel.getStyleClass().add(CSS_STYLES[3]);
         calculationButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[4]));
@@ -101,6 +103,7 @@ public class Application extends javafx.application.Application {
             if (validateOperation() || button.getText().equals(Operators.SUBTRACT.getSymbol()) && validateNegativePrefix()) {
                 lowerLabel.setText(lowerLabel.getText() + button.getText());
                 upperLabel.setText("");
+                handleOverflow(lowerLabel);
             }
         }));
 
@@ -110,6 +113,9 @@ public class Application extends javafx.application.Application {
             if (validateOperation()) {
                 lowerLabel.setText(ROUNDING_FORMAT.format(Calculator.performCalculation(calulationText)));
                 upperLabel.setText(calulationText);
+                handleOverflow(upperLabel);
+                lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
+                handleOverflow(lowerLabel);
             }
         });
 
@@ -128,22 +134,31 @@ public class Application extends javafx.application.Application {
         removeButton.setOnAction(event -> {
             String text = lowerLabel.getText();
             lowerLabel.setText(text.length() <= 1 ? "" : text.substring(0, text.length() - 1));
+            lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
+            handleOverflow(lowerLabel);
         });
         buttons.add(removeButton);
 
         Button percButton = new Button(Operators.PERCENTAGE.getSymbol());
-        percButton.setOnAction(event -> lowerLabel.setText(lowerLabel.getText() + percButton.getText()));
+        percButton.setOnAction(event -> {
+            lowerLabel.setText(lowerLabel.getText() + percButton.getText());
+            handleOverflow(lowerLabel);
+        });
         buttons.add(percButton);
 
         Button delButton = new Button(Operators.DELETE.getSymbol());
         delButton.setOnAction(event -> {
             lowerLabel.setText(DEFAULT_SYMBOL);
             upperLabel.setText("");
+            lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
         });
         buttons.add(delButton);
 
         Button floatButton = new Button(Operators.COMMA.getSymbol());
-        floatButton.setOnAction(event -> lowerLabel.setText(lowerLabel.getText() + floatButton.getText()));
+        floatButton.setOnAction(event -> {
+            lowerLabel.setText(lowerLabel.getText() + floatButton.getText());
+            handleOverflow(lowerLabel);
+        });
         buttons.add(floatButton);
 
         for (int i = 0; i < buttons.size(); i++) {
@@ -151,7 +166,6 @@ public class Application extends javafx.application.Application {
             currentButton.setLayoutX(EXTRA_COORDINATES[i].xPos());
             currentButton.setLayoutY(EXTRA_COORDINATES[i].yPos());
         }
-
         return buttons;
     }
 
@@ -164,8 +178,10 @@ public class Application extends javafx.application.Application {
             currentButton.setLayoutY(NUMBER_COORDINATES[i].yPos());
 
             currentButton.setOnAction(event -> {
-                lowerLabel.setText((lowerLabel.getText().equals(DEFAULT_SYMBOL) || !upperLabel.getText().isEmpty() ? "" : lowerLabel.getText()) + currentButton.getText());
+                lowerLabel.setText((lowerLabel.getText().equals(DEFAULT_SYMBOL) || !upperLabel.getText().isEmpty() ? "" :
+                        lowerLabel.getText()) + currentButton.getText());
                 upperLabel.setText("");
+                handleOverflow(lowerLabel);
             });
             buttons.add(currentButton);
         }
@@ -182,5 +198,16 @@ public class Application extends javafx.application.Application {
 
     private boolean isOperation(char lastCharacter) {
         return CALCULATION_OPERATORS.lastIndexOf(lastCharacter) != -1;
+    }
+
+    private void handleOverflow(Labeled label) {
+        Text text = new Text(label.getText());
+        text.setFont(label.getFont());
+        double textWidth = text.getLayoutBounds().getWidth();
+
+        if (label.getLayoutX() + textWidth > WIDTH - BUFFER_SIZE) {
+            double overflow = label.getLayoutX() + textWidth - WIDTH + BUFFER_SIZE;
+            label.setLayoutX(label.getLayoutX() - overflow);
+        }
     }
 }

@@ -20,7 +20,6 @@ public final class Calculator {
             if (temp[i].contains(PERCENT)) {
                 numbers[i] = Double.parseDouble(temp[i].replaceAll(PERCENT, "")) / 100;
             } else {
-                System.out.println("temp:" + temp[i]);
                 numbers[i] = Double.parseDouble(temp[i]);
             }
         }
