@@ -1,5 +1,11 @@
 package logic;
 
+/**
+ * List of the different operators used with their representative symbol.
+ *
+ * @author niklasfrietsch
+ * @version 1.0
+ */
 public enum Operators {
 
     ADD("+"),
@@ -9,7 +15,8 @@ public enum Operators {
     EQUALS("="),
     PERCENTAGE("%"),
     COMMA(","),
-    DELETE("AC");
+    DELETE("AC"),
+    REMOVE("⌫");
 
     private final String symbol;
 
@@ -17,6 +24,10 @@ public enum Operators {
         this.symbol = symbol;
     }
 
+    /**
+     * Getter for the symbol of the operators
+     * @return the symbol
+     */
     public String getSymbol() {
         return symbol;
     }

@@ -17,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The class models the entry of the application and is responsible for the creation of the graphic interface.
+ * Inherits from {@link javafx.application.Application}.
+ *
+ * @author niklasfrietsch
+ * @version 1.0
+ */
 public class Application extends javafx.application.Application {
     private static final int WIDTH = 195;
     private static final int HEIGHT = 320;
@@ -41,13 +48,16 @@ public class Application extends javafx.application.Application {
     private static final String PROGRAM_NAME = "Calculator";
     private static final String DEFAULT_SYMBOL = "0";
     private static final String[] CSS_STYLES = {"/Style.css", "panel", "label1", "label2", "calc_button", "number_button", "operate_button"};
-    private static final String DELETE_BUTTON_UNICODE = "⌫";
     private static final String CALCULATION_OPERATORS = "+-×÷";
     private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
     private static final int BUFFER_SIZE = 20;
     private Label lowerLabel;
     private Label upperLabel;
 
+    /**
+     * Main method.
+     * @param arg command line arguments
+     */
     public static void main(String[] arg) {
         launch(arg);
     }
@@ -91,6 +101,11 @@ public class Application extends javafx.application.Application {
         stage.show();
     }
 
+    /**
+     * Returns a List of type {@link Button}, containing the buttons responsible for the 4 basic operations as well as the result button
+     * and implements their behaviour.
+     * @return the list of the buttons
+     */
     private List<Button> getOperatorButtons() {
         List<Button> buttons = new ArrayList<>();
 
@@ -127,10 +142,15 @@ public class Application extends javafx.application.Application {
         return buttons;
     }
 
+    /**
+     * Returns a List of type {@link Button}, containing the buttons responsible for the extra operations, such as
+     * percentage, decimal points etc. and implements their behaviour.
+     * @return the list of the buttons
+     */
     private List<Button> getExtraButtons() {
         List<Button> buttons = new ArrayList<>();
 
-        Button removeButton = new Button(DELETE_BUTTON_UNICODE);
+        Button removeButton = new Button(Operators.REMOVE.getSymbol());
         removeButton.setOnAction(event -> {
             String text = lowerLabel.getText();
             lowerLabel.setText(text.length() <= 1 ? "" : text.substring(0, text.length() - 1));
@@ -169,6 +189,10 @@ public class Application extends javafx.application.Application {
         return buttons;
     }
 
+    /**
+     * Returns a List of type {@link Button}, containing the 10 number buttons and implements their behaviour.
+     * @return the list of the buttons
+     */
     private List<Button> getNumberButtons() {
         List<Button> buttons = new ArrayList<>();
 
@@ -200,6 +224,11 @@ public class Application extends javafx.application.Application {
         return CALCULATION_OPERATORS.lastIndexOf(lastCharacter) != -1;
     }
 
+    /**
+     * Handles overflow for a given {@link Label}, meaning if part of the label reaches out of the panel, the label is
+     * moved to the left accordingly.
+     * @param label the label to handle
+     */
     private void handleOverflow(Labeled label) {
         Text text = new Text(label.getText());
         text.setFont(label.getFont());

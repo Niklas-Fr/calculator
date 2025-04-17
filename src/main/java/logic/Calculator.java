@@ -1,5 +1,12 @@
 package logic;
 
+/**
+ * The class models the logic behind the Calculator and is responsible for peforming the calculation given by the
+ * {@link application.Application}.
+ *
+ * @author niklasfrietsch
+ * @version 1.0
+ */
 public final class Calculator {
     private static final String SEPARATOR = "[+\\-×÷]";
     private static final String INVERSED_SEPARATOR = "[^+\\-×÷]";
@@ -10,7 +17,13 @@ public final class Calculator {
     }
 
     //TODO: handle negative numbers
-    //TODO: punkt vor strich
+    //TODO: order of operations
+
+    /**
+     *
+     * @param caluculation
+     * @return
+     */
     public static double performCalculation(String caluculation) {
         String[] temp = caluculation.split(SEPARATOR);
         double[] numbers = new double[temp.length];
@@ -34,13 +47,24 @@ public final class Calculator {
         return numbers[numbers.length - 1];
     }
 
+    /**
+     * The method applies a calculation to two numbers, depending on the given operator char and returns the result of
+     * the operation.
+     * @param firstNum first number
+     * @param secondNum second number
+     * @param operator given operator
+     * @return the result of the operation
+     */
     private static double calculate(double firstNum, double secondNum, char operator) {
-        return switch (operator) {
-            case '+' -> firstNum + secondNum;
-            case '-' -> firstNum - secondNum;
-            case '×' -> firstNum * secondNum;
-            case '÷' -> firstNum / secondNum;
-            default -> throw new IllegalStateException("Unexpected value: " + operator);
-        };
+        if (operator == Operators.ADD.getSymbol().charAt(0)) {
+            return firstNum + secondNum;
+        } else if (operator == Operators.SUBTRACT.getSymbol().charAt(0)) {
+            return firstNum - secondNum;
+        } else if (operator == Operators.MULTIPLY.getSymbol().charAt(0)) {
+            return firstNum * secondNum;
+        } else if (operator == Operators.DIVIDE.getSymbol().charAt(0)) {
+            return firstNum / secondNum;
+        }
+        return 0;
     }
 }
