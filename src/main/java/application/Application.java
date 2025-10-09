@@ -63,7 +63,9 @@ public class Application extends javafx.application.Application {
     }
 
     // TODO: result should always be visible -> change font size depending on result
-
+    // TODO: how to handel large numbers?
+    // TODO: define coordinates in loop methods
+    // TODO: maybe introduce buttonTypes? (extract Button class and operation method)
     @Override
     public void start(Stage stage) {
         lowerLabel = new Label();

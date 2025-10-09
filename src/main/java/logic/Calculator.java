@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.Arrays;
+
 /**
  * The class models the logic behind the Calculator and is responsible for peforming the calculation given by the
  * {@link application.Application}.
@@ -16,16 +18,22 @@ public final class Calculator {
     private Calculator() {
     }
 
-    //TODO: handle negative numbers
     //TODO: order of operations
 
     /**
-     *
-     * @param caluculation
-     * @return
+     * The methods performs the arithmetic operation given by a String, containing the input to the Calculator.
+     * @param parsedCalculation the parsed input of the calculation
+     * @return the result of the operation
      */
-    public static double performCalculation(String caluculation) {
-        String[] temp = caluculation.split(SEPARATOR);
+    public static double performCalculation(String parsedCalculation) {
+        String calculation = parsedCalculation;
+        boolean firstNegative = false;
+        if (String.valueOf(parsedCalculation.charAt(0)).equals((Operators.SUBTRACT.getSymbol()))) {
+            firstNegative = true;
+            calculation = parsedCalculation.substring(1);
+        }
+
+        String[] temp = calculation.split(SEPARATOR);
         double[] numbers = new double[temp.length];
 
         for (int i = 0; i < temp.length; i++) {
@@ -36,7 +44,10 @@ public final class Calculator {
                 numbers[i] = Double.parseDouble(temp[i]);
             }
         }
-        char[] operators = caluculation.replaceAll(INVERSED_SEPARATOR, "").toCharArray();
+        Arrays.stream(temp).forEach(System.out::println);
+        if (firstNegative) numbers[0] = -numbers[0];
+
+        char[] operators = calculation.replaceAll(INVERSED_SEPARATOR, "").toCharArray();
 
         for (int i = 0; i < temp.length - 1; i++) {
             double firstNum = numbers[i];
