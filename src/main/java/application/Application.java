@@ -31,26 +31,13 @@ public class Application extends javafx.application.Application {
     private static final Coordinate LOWER_LABEL_COORDINATE = new Coordinate(20, 45);
     private static final Coordinate UPPER_LABEL_COORDINATE = new Coordinate(20, 10);
 
-    private static final Coordinate[] OPERATOR_COORDINATES = {new Coordinate(145, 90),
-            new Coordinate(145, 135), new Coordinate(145, 180), new Coordinate(145, 225),
-            new Coordinate(145, 270), new Coordinate(145, 310)};
-
-    private static final Coordinate[] EXTRA_COORDINATES = {new Coordinate(10, 90), new Coordinate(100, 90),
-            new Coordinate(10, 270), new Coordinate(100, 270)
-    };
-
-    private static final Coordinate[] NUMBER_COORDINATES = {new Coordinate(55, 270), new Coordinate(10, 135),
-            new Coordinate(55, 135), new Coordinate(100, 135), new Coordinate(10, 180),
-            new Coordinate(55, 180), new Coordinate(100, 180), new Coordinate(10, 225),
-            new Coordinate(55, 225), new Coordinate(100, 225)
-    };
-
     private static final String PROGRAM_NAME = "Calculator";
     private static final String DEFAULT_SYMBOL = "0";
     private static final String[] CSS_STYLES = {"/Style.css", "panel", "label1", "label2", "calc_button", "number_button", "operate_button"};
     private static final String CALCULATION_OPERATORS = "+-×÷";
     private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
     private static final int BUFFER_SIZE = 20;
+    private static final int BUTTON_DISTANCE = 45;
     private Label lowerLabel;
     private Label upperLabel;
 
@@ -64,8 +51,8 @@ public class Application extends javafx.application.Application {
 
     // TODO: result should always be visible -> change font size depending on result
     // TODO: how to handel large numbers?
-    // TODO: define coordinates in loop methods
     // TODO: maybe introduce buttonTypes? (extract Button class and operation method)
+    // TODO: handel overflow method
     @Override
     public void start(Stage stage) {
         lowerLabel = new Label();
@@ -76,17 +63,16 @@ public class Application extends javafx.application.Application {
         upperLabel.setLayoutX(UPPER_LABEL_COORDINATE.xPos());
         upperLabel.setLayoutY(UPPER_LABEL_COORDINATE.yPos());
 
-        List<Button> calculationButtons = getOperatorButtons();
-
         Pane pane = new Pane();
-        pane.getChildren().addAll(calculationButtons);
         pane.getChildren().add(lowerLabel);
         pane.getChildren().add(upperLabel);
 
+        List<Button> operatorButtons = getOperatorButtons();
         List<Button> numberButtons = getNumberButtons();
-        List<Button> operationButtons = getExtraButtons();
+        List<Button> extraButtons = getExtraButtons();
+        pane.getChildren().addAll(operatorButtons);
         pane.getChildren().addAll(numberButtons);
-        pane.getChildren().addAll(operationButtons);
+        pane.getChildren().addAll(extraButtons);
 
         Scene scene = new Scene(pane, WIDTH, HEIGHT);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource(CSS_STYLES[0])).toExternalForm());
@@ -94,9 +80,9 @@ public class Application extends javafx.application.Application {
         pane.getStyleClass().add(CSS_STYLES[1]);
         lowerLabel.getStyleClass().add(CSS_STYLES[2]);
         upperLabel.getStyleClass().add(CSS_STYLES[3]);
-        calculationButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[4]));
+        operatorButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[4]));
         numberButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[5]));
-        operationButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[6]));
+        extraButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[6]));
 
         stage.setTitle(PROGRAM_NAME);
         stage.setScene(scene);
@@ -136,10 +122,11 @@ public class Application extends javafx.application.Application {
             }
         });
 
+        Coordinate[] operatorPositions = getOperatorButtonPositions();
         for (int i = 0; i < buttons.size(); i++) {
             Button currentButton = buttons.get(i);
-            currentButton.setLayoutX(OPERATOR_COORDINATES[i].xPos());
-            currentButton.setLayoutY(OPERATOR_COORDINATES[i].yPos());
+            currentButton.setLayoutX(operatorPositions[i].xPos());
+            currentButton.setLayoutY(operatorPositions[i].yPos());
         }
         return buttons;
     }
@@ -183,10 +170,11 @@ public class Application extends javafx.application.Application {
         });
         buttons.add(floatButton);
 
+        Coordinate[] extraPositions = getExtraButtonPositions();
         for (int i = 0; i < buttons.size(); i++) {
             Button currentButton = buttons.get(i);
-            currentButton.setLayoutX(EXTRA_COORDINATES[i].xPos());
-            currentButton.setLayoutY(EXTRA_COORDINATES[i].yPos());
+            currentButton.setLayoutX(extraPositions[i].xPos());
+            currentButton.setLayoutY(extraPositions[i].yPos());
         }
         return buttons;
     }
@@ -198,10 +186,11 @@ public class Application extends javafx.application.Application {
     private List<Button> getNumberButtons() {
         List<Button> buttons = new ArrayList<>();
 
+        Coordinate[] numberPositions = getNumberButtonPoistions();
         for (int i = 0; i < 10; i++) {
             Button currentButton = new Button(String.valueOf(i));
-            currentButton.setLayoutX(NUMBER_COORDINATES[i].xPos());
-            currentButton.setLayoutY(NUMBER_COORDINATES[i].yPos());
+            currentButton.setLayoutX(numberPositions[i].xPos());
+            currentButton.setLayoutY(numberPositions[i].yPos());
 
             currentButton.setOnAction(event -> {
                 lowerLabel.setText((lowerLabel.getText().equals(DEFAULT_SYMBOL) || !upperLabel.getText().isEmpty() ? "" :
@@ -224,6 +213,44 @@ public class Application extends javafx.application.Application {
 
     private boolean isOperation(char lastCharacter) {
         return CALCULATION_OPERATORS.lastIndexOf(lastCharacter) != -1;
+    }
+
+    /**
+     * Helper method, returns the positions of the Operator Buttons
+     * @return Array of the Coordinates
+     */
+    private Coordinate[] getOperatorButtonPositions() {
+        Coordinate[] operatorCoordinates = new Coordinate[6];
+        for (int i = 0; i < operatorCoordinates.length; i++) {
+            operatorCoordinates[i] = new Coordinate(145, (i + 2) * BUTTON_DISTANCE);
+        }
+        return operatorCoordinates;
+    }
+
+    /**
+     * Helper method, returns the positions of the Extra Buttons
+     * @return Array of the Coordinates
+     */
+    private Coordinate[] getExtraButtonPositions() {
+        return new Coordinate[]{new Coordinate(10, 90), new Coordinate(100, 90),
+                new Coordinate(10, 270), new Coordinate(100, 270)};
+    }
+
+    /**
+     * Helper method, returns the positions of the Number Buttons
+     * @return Array of the Coordinates
+     */
+    private Coordinate[] getNumberButtonPoistions() {
+        Coordinate[] numberPositions = new Coordinate[10];
+        numberPositions[0] = new Coordinate(55, 270);
+        for (int i = 1; i < numberPositions.length; i++) {
+            int columnIndex = (i - 1) % 3;
+            int xPos = 10 + columnIndex * BUTTON_DISTANCE;
+            int rowIndex = (i - 1) / 3;
+            int yPos = (3 + rowIndex) * BUTTON_DISTANCE;
+            numberPositions[i] = new Coordinate(xPos, yPos);
+        }
+        return numberPositions;
     }
 
     /**
