@@ -11,8 +11,6 @@ import logic.Coordinate;
 import logic.Operators;
 import javafx.scene.text.Text;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +33,7 @@ public class Application extends javafx.application.Application {
     private static final String DEFAULT_SYMBOL = "0";
     private static final String[] CSS_STYLES = {"/Style.css", "panel", "label1", "label2", "calc_button", "number_button", "operate_button"};
     private static final String CALCULATION_OPERATORS = "+-×÷";
-    private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
+
     private static final int BUFFER_SIZE = 20;
     private static final int BUTTON_DISTANCE = 45;
     private Label lowerLabel;
@@ -51,8 +49,9 @@ public class Application extends javafx.application.Application {
 
     // TODO: result should always be visible -> change font size depending on result
     // TODO: how to handel large numbers?
-    // TODO: maybe introduce buttonTypes? (extract Button class and operation method)
     // TODO: handel overflow method
+    // TODO: multiple commata
+
     @Override
     public void start(Stage stage) {
         lowerLabel = new Label();
@@ -114,7 +113,7 @@ public class Application extends javafx.application.Application {
         buttons.getLast().setOnAction(event -> {
             String calulationText = lowerLabel.getText();
             if (validateOperation()) {
-                lowerLabel.setText(ROUNDING_FORMAT.format(Calculator.performCalculation(calulationText)));
+                lowerLabel.setText(Calculator.performCalculation(calulationText));
                 upperLabel.setText(calulationText);
                 handleOverflow(upperLabel);
                 lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
@@ -169,6 +168,13 @@ public class Application extends javafx.application.Application {
             handleOverflow(lowerLabel);
         });
         buttons.add(floatButton);
+
+        Button negativeButton = new Button(Operators.NEGATIVE.getSymbol());
+        negativeButton.setOnAction(event -> {
+            lowerLabel.setText(lowerLabel.getText() + negativeButton.getText());
+            handleOverflow(lowerLabel);
+        });
+        buttons.add(negativeButton);
 
         Coordinate[] extraPositions = getExtraButtonPositions();
         for (int i = 0; i < buttons.size(); i++) {
@@ -233,7 +239,7 @@ public class Application extends javafx.application.Application {
      */
     private Coordinate[] getExtraButtonPositions() {
         return new Coordinate[]{new Coordinate(10, 90), new Coordinate(100, 90),
-                new Coordinate(10, 270), new Coordinate(100, 270)};
+                new Coordinate(10, 270), new Coordinate(100, 270), new Coordinate(55, 90)};
     }
 
     /**

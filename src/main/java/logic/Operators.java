@@ -15,6 +15,7 @@ public enum Operators {
     EQUALS("="),
     PERCENTAGE("%"),
     COMMA(","),
+    NEGATIVE("—"),
     DELETE("AC"),
     REMOVE("⌫");
 
