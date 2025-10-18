@@ -6,6 +6,7 @@ package logic;
  * @author niklasfrietsch
  * @version 1.0
  */
+// TODO: javadoc
 public enum Operators {
 
     ADD("+"),

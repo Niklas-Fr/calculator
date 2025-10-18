@@ -32,10 +32,11 @@ public class Application extends javafx.application.Application {
     private static final String PROGRAM_NAME = "Calculator";
     private static final String DEFAULT_SYMBOL = "0";
     private static final String[] CSS_STYLES = {"/Style.css", "panel", "label1", "label2", "calc_button", "number_button", "operate_button"};
-    private static final String CALCULATION_OPERATORS = "+-×÷";
+    private static final String OPERATORS = "[+\\-×÷]";
 
     private static final int BUFFER_SIZE = 20;
     private static final int BUTTON_DISTANCE = 45;
+    private static final int MAX_LENGTH = 20;
     private Label lowerLabel;
     private Label upperLabel;
 
@@ -47,11 +48,8 @@ public class Application extends javafx.application.Application {
         launch(arg);
     }
 
-    // TODO: result should always be visible -> change font size depending on result
-    // TODO: how to handel large numbers?
-    // TODO: handel overflow method
-    // TODO: multiple commata
-
+    // TODO: result should always be visible -> font size, label size?
+    // TODO: magic numbers
     @Override
     public void start(Stage stage) {
         lowerLabel = new Label();
@@ -149,8 +147,11 @@ public class Application extends javafx.application.Application {
 
         Button percButton = new Button(Operators.PERCENTAGE.getSymbol());
         percButton.setOnAction(event -> {
-            lowerLabel.setText(lowerLabel.getText() + percButton.getText());
-            handleOverflow(lowerLabel);
+            String labelText = lowerLabel.getText();
+            if (containsNoSymbol(labelText, Operators.PERCENTAGE.getSymbol())) {
+                lowerLabel.setText(labelText + percButton.getText());
+                handleOverflow(lowerLabel);
+            }
         });
         buttons.add(percButton);
 
@@ -159,20 +160,28 @@ public class Application extends javafx.application.Application {
             lowerLabel.setText(DEFAULT_SYMBOL);
             upperLabel.setText("");
             lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
+            upperLabel.setLayoutX(UPPER_LABEL_COORDINATE.xPos());
         });
         buttons.add(delButton);
 
         Button floatButton = new Button(Operators.COMMA.getSymbol());
         floatButton.setOnAction(event -> {
-            lowerLabel.setText(lowerLabel.getText() + floatButton.getText());
-            handleOverflow(lowerLabel);
+            String labelText = lowerLabel.getText();
+            if (containsNoSymbol(labelText, Operators.COMMA.getSymbol())) {
+                lowerLabel.setText(labelText + floatButton.getText());
+                handleOverflow(lowerLabel);
+            }
         });
         buttons.add(floatButton);
 
         Button negativeButton = new Button(Operators.NEGATIVE.getSymbol());
         negativeButton.setOnAction(event -> {
-            lowerLabel.setText(lowerLabel.getText() + negativeButton.getText());
-            handleOverflow(lowerLabel);
+            String labelText = lowerLabel.getText();
+            if (containsNoSymbol(labelText, Operators.NEGATIVE.getSymbol()) &&
+                    isOperation(String.valueOf(labelText.charAt(labelText.length() - 1)))) {
+                lowerLabel.setText(labelText + negativeButton.getText());
+                handleOverflow(lowerLabel);
+            }
         });
         buttons.add(negativeButton);
 
@@ -199,10 +208,12 @@ public class Application extends javafx.application.Application {
             currentButton.setLayoutY(numberPositions[i].yPos());
 
             currentButton.setOnAction(event -> {
-                lowerLabel.setText((lowerLabel.getText().equals(DEFAULT_SYMBOL) || !upperLabel.getText().isEmpty() ? "" :
-                        lowerLabel.getText()) + currentButton.getText());
-                upperLabel.setText("");
-                handleOverflow(lowerLabel);
+                if (lowerLabel.getText().length() < MAX_LENGTH) {
+                    lowerLabel.setText((lowerLabel.getText().equals(DEFAULT_SYMBOL) || !upperLabel.getText().isEmpty() ? "" :
+                            lowerLabel.getText()) + currentButton.getText());
+                    upperLabel.setText("");
+                    handleOverflow(lowerLabel);
+                }
             });
             buttons.add(currentButton);
         }
@@ -210,15 +221,20 @@ public class Application extends javafx.application.Application {
     }
 
     private boolean validateOperation() {
-        return !lowerLabel.getText().isEmpty() && !isOperation(lowerLabel.getText().charAt(lowerLabel.getText().length() - 1));
+        return !lowerLabel.getText().isEmpty() && !isOperation(String.valueOf(lowerLabel.getText().charAt(lowerLabel.getText().length() - 1)));
     }
 
     private boolean validateNegativePrefix() {
         return lowerLabel.getText().isEmpty() || lowerLabel.getText().charAt(lowerLabel.getText().length() - 1) == Operators.SUBTRACT.getSymbol().charAt(0);
     }
 
-    private boolean isOperation(char lastCharacter) {
-        return CALCULATION_OPERATORS.lastIndexOf(lastCharacter) != -1;
+    private boolean isOperation(String lastCharacter) {
+        return lastCharacter.matches(OPERATORS);
+    }
+
+    private boolean containsNoSymbol(String calculationText, String symbol) {
+        String[] tokens = calculationText.split(OPERATORS);
+        return !tokens[tokens.length - 1].contains(symbol) || String.valueOf(calculationText.charAt(calculationText.length() - 1)).matches(OPERATORS);
     }
 
     /**

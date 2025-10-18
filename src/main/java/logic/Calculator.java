@@ -27,18 +27,18 @@ public final class Calculator {
      * @return the result of the operation
      */
     public static String performCalculation(String parsedCalculation) {
-        String[] temp = parsedCalculation.split(SEPARATOR);
-        double[] numbers = new double[temp.length];
+        String[] tokens = parsedCalculation.split(SEPARATOR);
+        double[] numbers = new double[tokens.length];
 
-        for (int i = 0; i < temp.length; i++) {
-            temp[i] = temp[i].replace(Operators.COMMA.getSymbol(), DECIMAL_POINT);
-            boolean negative = temp[i].contains(Operators.NEGATIVE.getSymbol());
-            temp[i] = temp[i].replaceAll(Operators.NEGATIVE.getSymbol(), "");
+        for (int i = 0; i < tokens.length; i++) {
+            tokens[i] = tokens[i].replace(Operators.COMMA.getSymbol(), DECIMAL_POINT);
+            boolean negative = tokens[i].contains(Operators.NEGATIVE.getSymbol());
+            tokens[i] = tokens[i].replaceAll(Operators.NEGATIVE.getSymbol(), "");
 
-            if (temp[i].contains(Operators.PERCENTAGE.getSymbol())) {
-                numbers[i] = Double.parseDouble(temp[i].replaceAll(Operators.PERCENTAGE.getSymbol(), "")) / 100;
+            if (tokens[i].contains(Operators.PERCENTAGE.getSymbol())) {
+                numbers[i] = Double.parseDouble(tokens[i].replaceAll(Operators.PERCENTAGE.getSymbol(), "")) / 100;
             } else {
-                numbers[i] = Double.parseDouble(temp[i]);
+                numbers[i] = Double.parseDouble(tokens[i]);
             }
 
             if (negative) numbers[i] = -numbers[i];
@@ -47,7 +47,7 @@ public final class Calculator {
 
         char[] operators = parsedCalculation.replaceAll(INVERSED_SEPARATOR, "").toCharArray();
 
-        for (int i = 0; i < temp.length - 1; i++) {
+        for (int i = 0; i < numbers.length - 1; i++) {
             double firstNum = numbers[i];
             double secondNum = numbers[i + 1];
 
