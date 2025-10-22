@@ -11,6 +11,8 @@ import logic.Coordinate;
 import logic.Operators;
 import javafx.scene.text.Text;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,11 +30,18 @@ public class Application extends javafx.application.Application {
 
     private static final Coordinate LOWER_LABEL_COORDINATE = new Coordinate(20, 45);
     private static final Coordinate UPPER_LABEL_COORDINATE = new Coordinate(20, 10);
+    private static final Coordinate[] EXTRA_BUTTON_POSITIONS = {
+            new Coordinate(10, 90),
+            new Coordinate(100, 90),
+            new Coordinate(10, 270),
+            new Coordinate(100, 270),
+            new Coordinate(55, 90)};
 
     private static final String PROGRAM_NAME = "Calculator";
     private static final String DEFAULT_SYMBOL = "0";
-    private static final String[] CSS_STYLES = {"/Style.css", "panel", "label1", "label2", "calc_button", "number_button", "operate_button"};
+    private static final String[] CSS_STYLES = {"/Style.css", "panel", "lower_label", "upper_label", "calc_button", "number_button", "operate_button"};
     private static final String OPERATORS = "[+\\-×÷]";
+    private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
 
     private static final int BUFFER_SIZE = 20;
     private static final int BUTTON_DISTANCE = 45;
@@ -42,14 +51,13 @@ public class Application extends javafx.application.Application {
 
     /**
      * Main method.
-     * @param arg command line arguments
+     * @param args command line arguments
      */
-    public static void main(String[] arg) {
-        launch(arg);
+    public static void main(String[] args) {
+        launch(args);
     }
 
     // TODO: result should always be visible -> font size, label size?
-    // TODO: magic numbers
     @Override
     public void start(Stage stage) {
         lowerLabel = new Label();
@@ -111,7 +119,9 @@ public class Application extends javafx.application.Application {
         buttons.getLast().setOnAction(event -> {
             String calulationText = lowerLabel.getText();
             if (validateOperation()) {
-                lowerLabel.setText(Calculator.performCalculation(calulationText));
+                double result = Calculator.performCalculation(calulationText);
+                String roundedResult = ROUNDING_FORMAT.format(result);
+                lowerLabel.setText(roundedResult.replaceAll(Operators.SUBTRACT.getSymbol(), Operators.NEGATIVE.getSymbol()));
                 upperLabel.setText(calulationText);
                 handleOverflow(upperLabel);
                 lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
@@ -185,11 +195,10 @@ public class Application extends javafx.application.Application {
         });
         buttons.add(negativeButton);
 
-        Coordinate[] extraPositions = getExtraButtonPositions();
         for (int i = 0; i < buttons.size(); i++) {
             Button currentButton = buttons.get(i);
-            currentButton.setLayoutX(extraPositions[i].xPos());
-            currentButton.setLayoutY(extraPositions[i].yPos());
+            currentButton.setLayoutX(EXTRA_BUTTON_POSITIONS[i].xPos());
+            currentButton.setLayoutY(EXTRA_BUTTON_POSITIONS[i].yPos());
         }
         return buttons;
     }
@@ -247,15 +256,6 @@ public class Application extends javafx.application.Application {
             operatorCoordinates[i] = new Coordinate(145, (i + 2) * BUTTON_DISTANCE);
         }
         return operatorCoordinates;
-    }
-
-    /**
-     * Helper method, returns the positions of the Extra Buttons
-     * @return Array of the Coordinates
-     */
-    private Coordinate[] getExtraButtonPositions() {
-        return new Coordinate[]{new Coordinate(10, 90), new Coordinate(100, 90),
-                new Coordinate(10, 270), new Coordinate(100, 270), new Coordinate(55, 90)};
     }
 
     /**

@@ -1,8 +1,5 @@
 package logic;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 /**
  * The class models the logic behind the Calculator and is responsible for peforming the calculation given by the
  * {@link application.Application}.
@@ -11,7 +8,6 @@ import java.text.NumberFormat;
  * @version 1.0
  */
 public final class Calculator {
-    private static final NumberFormat ROUNDING_FORMAT = new DecimalFormat("0.####");
     private static final String SEPARATOR = "[+\\-×÷]";
     private static final String INVERSED_SEPARATOR = "[^+\\-×÷]";
     private static final String DECIMAL_POINT = ".";
@@ -26,7 +22,7 @@ public final class Calculator {
      * @param parsedCalculation the parsed input of the calculation
      * @return the result of the operation
      */
-    public static String performCalculation(String parsedCalculation) {
+    public static double performCalculation(String parsedCalculation) {
         String[] tokens = parsedCalculation.split(SEPARATOR);
         double[] numbers = new double[tokens.length];
 
@@ -53,8 +49,8 @@ public final class Calculator {
 
             numbers[i + 1] = calculate(firstNum, secondNum, operators[i]);
         }
-        String result = ROUNDING_FORMAT.format(numbers[numbers.length - 1]);
-        return result.replaceAll(Operators.SUBTRACT.getSymbol(), Operators.NEGATIVE.getSymbol());
+
+        return numbers[numbers.length - 1];
     }
 
     /**

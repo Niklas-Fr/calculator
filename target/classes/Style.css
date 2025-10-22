@@ -2,7 +2,7 @@
     -fx-background-color: #313131;
 }
 
-.label1{
+.lower_label{
     -fx-background-color: #313131;
     -fx-pref-width: 1000px;
     -fx-pref-height: 40px;
@@ -12,7 +12,7 @@
     -fx-font-weight: 600;
 }
 
-.label2{
+.upper_label{
     -fx-background-color: #313131;
     -fx-pref-width: 1000px;
     -fx-pref-height: 40px;
