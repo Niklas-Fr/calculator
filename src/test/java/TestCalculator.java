@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Class for Testing the {@link Calculator} and its method {@link Calculator#performCalculation(String)}.
  * @author niklasfrietsch
- * @version 10
+ * @version 1.0
  */
 class TestCalculator {
 
