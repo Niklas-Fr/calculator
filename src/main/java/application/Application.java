@@ -57,8 +57,6 @@ public class Application extends javafx.application.Application {
         launch(args);
     }
 
-    // TODO: result should always be visible -> font size, label size?
-    // TODO: exception when - for empty input
     @Override
     public void start(Stage primaryStage) {
         lowerLabel = new Label();
@@ -188,8 +186,9 @@ public class Application extends javafx.application.Application {
         Button negativeButton = new Button(Operators.NEGATIVE.getSymbol());
         negativeButton.setOnAction(event -> {
             String labelText = lowerLabel.getText();
-            if (containsNoSymbol(labelText, Operators.NEGATIVE.getSymbol()) &&
-                    isOperation(String.valueOf(labelText.charAt(labelText.length() - 1)))) {
+            if (labelText.isEmpty() ||
+                    (containsNoSymbol(labelText, Operators.NEGATIVE.getSymbol()) &&
+                            isOperation(String.valueOf(labelText.charAt(labelText.length() - 1))))) {
                 lowerLabel.setText(labelText + negativeButton.getText());
                 handleOverflow(lowerLabel);
             }
