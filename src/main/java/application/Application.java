@@ -58,8 +58,9 @@ public class Application extends javafx.application.Application {
     }
 
     // TODO: result should always be visible -> font size, label size?
+    // TODO: exception when - for empty input
     @Override
-    public void start(Stage stage) {
+    public void start(Stage primaryStage) {
         lowerLabel = new Label();
         lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
         lowerLabel.setLayoutY(LOWER_LABEL_COORDINATE.yPos());
@@ -89,14 +90,14 @@ public class Application extends javafx.application.Application {
         numberButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[5]));
         extraButtons.forEach(button -> button.getStyleClass().add(CSS_STYLES[6]));
 
-        stage.setTitle(PROGRAM_NAME);
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setTitle(PROGRAM_NAME);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     /**
      * Returns a List of type {@link Button}, containing the buttons responsible for the 4 basic operations as well as the result button
-     * and implements their behaviour.
+     * and implements their behavior.
      * @return the list of the buttons
      */
     private List<Button> getOperatorButtons() {
@@ -140,7 +141,7 @@ public class Application extends javafx.application.Application {
 
     /**
      * Returns a List of type {@link Button}, containing the buttons responsible for the extra operations, such as
-     * percentage, decimal points etc. and implements their behaviour.
+     * percentage, decimal points etc. and implements their behavior.
      * @return the list of the buttons
      */
     private List<Button> getExtraButtons() {
@@ -204,7 +205,7 @@ public class Application extends javafx.application.Application {
     }
 
     /**
-     * Returns a List of type {@link Button}, containing the 10 number buttons and implements their behaviour.
+     * Returns a List of type {@link Button}, containing the 10 number buttons and implements their behavior.
      * @return the list of the buttons
      */
     private List<Button> getNumberButtons() {

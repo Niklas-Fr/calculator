@@ -38,4 +38,14 @@ class TestCalculator {
         double expectedResult = (double) 51 / 3 + 9;
         Assertions.assertEquals(expectedResult, result);
     }
+
+    /**
+     * Tests that multiplication and division take precedence over addition and subtraction.
+     */
+    @Test
+    void orderOfOperations() {
+        double result = Calculator.performCalculation("2+3×4-10÷5");
+        double expectedResult = 2 + 3 * 4 - (double) 10 / 5;
+        Assertions.assertEquals(expectedResult, result);
+    }
 }
