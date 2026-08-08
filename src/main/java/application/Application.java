@@ -49,14 +49,6 @@ public class Application extends javafx.application.Application {
     private Label lowerLabel;
     private Label upperLabel;
 
-    /**
-     * Main method.
-     * @param args command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) {
         lowerLabel = new Label();
@@ -116,12 +108,12 @@ public class Application extends javafx.application.Application {
 
         buttons.add(new Button(Operators.EQUALS.getSymbol()));
         buttons.getLast().setOnAction(event -> {
-            String calulationText = lowerLabel.getText();
+            String calculationText = lowerLabel.getText();
             if (validateOperation()) {
-                double result = Calculator.performCalculation(calulationText);
+                double result = Calculator.performCalculation(calculationText);
                 String roundedResult = ROUNDING_FORMAT.format(result);
                 lowerLabel.setText(roundedResult.replaceAll(Operators.SUBTRACT.getSymbol(), Operators.NEGATIVE.getSymbol()));
-                upperLabel.setText(calulationText);
+                upperLabel.setText(calculationText);
                 handleOverflow(upperLabel);
                 lowerLabel.setLayoutX(LOWER_LABEL_COORDINATE.xPos());
                 handleOverflow(lowerLabel);
@@ -210,7 +202,7 @@ public class Application extends javafx.application.Application {
     private List<Button> getNumberButtons() {
         List<Button> buttons = new ArrayList<>();
 
-        Coordinate[] numberPositions = getNumberButtonPoistions();
+        Coordinate[] numberPositions = getNumberButtonPositions();
         for (int i = 0; i < 10; i++) {
             Button currentButton = new Button(String.valueOf(i));
             currentButton.setLayoutX(numberPositions[i].xPos());
@@ -262,7 +254,7 @@ public class Application extends javafx.application.Application {
      * Helper method, returns the positions of the Number Buttons
      * @return Array of the Coordinates
      */
-    private Coordinate[] getNumberButtonPoistions() {
+    private Coordinate[] getNumberButtonPositions() {
         Coordinate[] numberPositions = new Coordinate[10];
         numberPositions[0] = new Coordinate(55, 270);
         for (int i = 1; i < numberPositions.length; i++) {

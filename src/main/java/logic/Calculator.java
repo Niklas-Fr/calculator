@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 /**
- * The class models the logic behind the Calculator and is responsible for peforming the calculation given by the
+ * The class models the logic behind the Calculator and is responsible for performing the calculation given by the
  * {@link application.Application}.
  *
  * @author niklasfrietsch
@@ -19,7 +19,7 @@ public final class Calculator {
     }
 
     /**
-     * The methods performs the arithmetic operation given by a String, containing the input to the Calculator.
+     * The method performs the arithmetic operation given by a String, containing the input to the Calculator.
      * Operator precedence (multiplication/division before addition/subtraction) is respected via the
      * shunting-yard algorithm.
      *
